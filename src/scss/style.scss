@@ -1,0 +1,73 @@
+@import '../../node_modules/normalize.css/normalize';
+
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  list-style-type: none;
+  resize: none;
+  outline: none;
+  text-decoration: none;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(45deg, #000, #1D232F);
+}
+
+.container {
+  max-width: 1440px;
+  padding: 0 10px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.wrapper {
+  width: 600px;
+  height: 600px;
+  &__rows {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    &-list {
+      display: flex;
+      justify-content: space-between;
+      &-item {
+        width: 12.5%;
+        height: 65px;
+        cursor: pointer;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover {
+          box-shadow: inset 0 0 0 3px #85D6CF;
+        }
+      }
+    }
+  }
+}
+
+.active-cell {
+  box-shadow: inset 0 0 0 3px #85D6CF !important;
+}
+
+.green-cell {
+  background: #93B178 !important;
+  box-shadow: inset 0 0 0 1px #000;
+}
+
+.attack-cell {
+  background: #C82D32 !important;
+  box-shadow: inset 0 0 0 1px #000;
+}
