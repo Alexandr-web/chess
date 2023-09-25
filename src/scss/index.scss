@@ -1,0 +1,53 @@
+@import "./_global";
+
+.wrapper {
+    height: 100vh;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.chess {
+    width: 500px;
+    border: 1px solid black;
+    height: 500px;
+
+    &__rows {
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    &__cell {
+        height: 100%;
+        cursor: pointer;
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+
+        &:nth-child(odd) {
+            .chess__cell:nth-child(odd) {
+                background-color: #FFFFD7;
+            }
+            .chess__cell:nth-child(even) {
+                background-color: #7FB7A8;
+            }
+        }
+
+        &:nth-child(even) {
+            .chess__cell:nth-child(odd) {
+                background-color: #7FB7A8;
+            }
+
+            .chess__cell:nth-child(even) {
+                background-color: #FFFFD7;
+            }
+        }
+    }
+}
