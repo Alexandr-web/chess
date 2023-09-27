@@ -3,7 +3,6 @@ import figuresData from "./figuresData";
 export default class Chess {
     constructor() {
         this.rowsList = document.querySelector(".chess__rows");
-        this.data = [];
         this.move = "white";
     }
 
@@ -31,12 +30,129 @@ export default class Chess {
     _renderFigures(isWhite = true) {
         figuresData.forEach(({ figure, filename, defaultPlaces, }) => {
             defaultPlaces.forEach(({ x, y, }) => {
-                const cell = document.querySelector(`.chess__cell[data-x="${x}"][data-y="${(isWhite ? (7 - y) : y)}"]`);
+                const side = isWhite ? "white" : "black";
+                const src = `./images/${filename + (isWhite ? "-white" : "") + ".svg"}`;
+                const coordinateY = (isWhite ? (7 - y) : y);
 
-                cell.dataset.figure = figure;
-                cell.dataset.side = isWhite ? "white" : "black";
+                this._addFigureOnCell(x, coordinateY, side, src, figure);
+            });
+        });
+    }
 
-                cell.innerHTML = `<img src="./images/${filename + (isWhite ? "-white" : "") + ".svg"}" />`;
+    _clearDataCells() {
+        const cells = document.querySelectorAll(".chess__cell");
+
+        cells.forEach((cell) => {
+            cell.removeAttribute("data-area-move");
+            cell.removeAttribute("data-active-figure");
+            cell.removeAttribute("data-area-enemy");
+        });
+    }
+
+    _viewMovesByClickOnFigure() {
+        const cells = document.querySelectorAll(".chess__cell");
+
+        cells.forEach((cell) => {
+            cell.addEventListener("click", () => {
+                if (!cell.hasAttribute("data-figure")) {
+                    return;
+                }
+
+                const figure = cell.dataset.figure;
+                const side = cell.dataset.side;
+                const onceMoved = cell.hasAttribute("data-once-moved");
+                const moves = figuresData.find((figData) => figData.figure === figure).moves.filter((move) => {
+                    if (onceMoved) {
+                        return !move.once;
+                    }
+
+                    return move;
+                });
+                const figureX = parseInt(cell.dataset.x);
+                const figureY = parseInt(cell.dataset.y);
+
+                this._clearDataCells();
+
+                for (let i = 0; i < moves.length; i++) {
+                    const { x, y, } = moves[i];
+
+                    for (let j = 0; j < x.length; j++) {
+                        const defCoordinateX = x[j];
+                        const defCoordinateY = y[j];
+                        const coordinateY = figureY + ((figure === "pawn" && side === "white") ? -1 * defCoordinateY : defCoordinateY);
+                        const coordinateX = defCoordinateX + figureX;
+                        const cellMove = document.querySelector(`.chess__cell[data-x="${coordinateX}"][data-y="${coordinateY}"]`);
+
+                        if (cellMove && cellMove.dataset.side !== side && cellMove.dataset.figure) {
+                            cellMove.dataset.areaMove = "";
+                            cellMove.dataset.areaEnemy = "";
+                            break;
+                        }
+
+                        if (!cellMove || cellMove.dataset.side === side) {
+                            // Возможность "перепрыгивать" фигуры есть только у коня
+                            if (figure === "horse") {
+                                continue;
+                            }
+
+                            // Заканчиваем искать доступные ячейки для хода
+                            // так как есть преграда или же ячейки вообще не 
+                            // существует
+                            break;
+                        }
+
+                        cellMove.dataset.areaMove = "";
+                        cell.dataset.activeFigure = "";
+                    }
+                }
+            });
+        });
+    }
+
+    _addFigureOnCell(x, y, side, src, figure, oldCell) {
+        const cell = document.querySelector(`.chess__cell[data-x="${x}"][data-y="${y}"]`)
+
+        cell.dataset.figure = figure;
+        cell.dataset.side = side;
+
+        if (oldCell && figure === "pawn") {
+            cell.dataset.onceMoved = "";
+        }
+
+        cell.innerHTML = `<img src="${src}" />`;
+    }
+
+    _removeFigureOnCell(x, y) {
+        const cell = document.querySelector(`.chess__cell[data-x="${x}"][data-y="${y}"]`)
+
+        cell.removeAttribute("data-figure");
+        cell.removeAttribute("data-side");
+
+        this._clearDataCells();
+
+        cell.innerHTML = "";
+    }
+
+    _moveFigure() {
+        const cells = document.querySelectorAll(".chess__cell");
+
+        cells.forEach((cell) => {
+            cell.addEventListener("click", () => {
+                if (!cell.hasAttribute("data-area-move")) {
+                    return;
+                }
+
+                const activeFigure = document.querySelector(".chess__cell[data-active-figure]");
+                const newFigureX = parseInt(cell.dataset.x);
+                const newFigureY = parseInt(cell.dataset.y);
+                const oldFigureX = parseInt(activeFigure.dataset.x);
+                const oldFigureY = parseInt(activeFigure.dataset.y);
+                const side = activeFigure.dataset.side;
+                const figure = activeFigure.dataset.figure;
+                const src = activeFigure.querySelector("img").src;
+
+                this._addFigureOnCell(newFigureX, newFigureY, side, src, figure, activeFigure);
+                this._removeFigureOnCell(oldFigureX, oldFigureY);
             });
         });
     }
@@ -45,5 +161,7 @@ export default class Chess {
         this._renderRows();
         this._renderFigures();
         this._renderFigures(false);
+        this._viewMovesByClickOnFigure();
+        this._moveFigure();
     }
 }
