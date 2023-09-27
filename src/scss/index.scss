@@ -25,16 +25,22 @@
     &__cell {
         height: 100%;
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
     }
 
     &__row {
+        height: 62px;
         display: grid;
         grid-template-columns: repeat(8, 1fr);
 
         &:nth-child(odd) {
             .chess__cell:nth-child(odd) {
-                background-color: #FFFFD7;
+                background-color: #E1E19A;
             }
+
             .chess__cell:nth-child(even) {
                 background-color: #7FB7A8;
             }
@@ -46,7 +52,7 @@
             }
 
             .chess__cell:nth-child(even) {
-                background-color: #FFFFD7;
+                background-color: #E1E19A;
             }
         }
     }

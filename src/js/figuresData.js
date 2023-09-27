@@ -1,8 +1,8 @@
 export default [
     {
         figure: "pawn",
-        steps: [{ x: 0, y: 1, }, { x: 0, y: 2, once: true, }],
-        icon: "pawn.svg",
+        steps: [{ x: [0], y: [1], }, { x: [0], y: [2], once: true, }],
+        filename: "pawn",
         defaultPlaces: [
             { x: 0, y: 1, },
             { x: 1, y: 1, },
@@ -22,7 +22,7 @@ export default [
             { x: [-1, -2, -3, -4, -5, -6, -7], y: [0, 0, 0, 0, 0, 0, 0], },
             { x: [0, 0, 0, 0, 0, 0, 0], y: [-1, -2, -3, -4, -5, -6, -7], },
         ],
-        icon: "rook.svg",
+        filename: "rook",
         defaultPlaces: [{ x: 0, y: 0, }, { x: 7, y: 0, }],
     },
     {
@@ -37,7 +37,7 @@ export default [
             { x: [-1], y: [-2], },
             { x: [1], y: [-2], },
         ],
-        icon: "horse.svg",
+        filename: "horse",
         defaultPlaces: [{ x: 1, y: 0, }, { x: 6, y: 0, }],
     },
     {
@@ -48,8 +48,8 @@ export default [
             { x: [-1, -2, -3, -4, -5, -6, -7], y: [-1, -2, -3, -4, -5, -6, -7], },
             { x: [1, 2, 3, 4, 5, 6, 7], y: [-1, -2, -3, -4, -5, -6, -7], },
         ],
-        icon: "elephant.svg",
-        defaultPlace: { x: 0, y: 0, },
+        filename: "elephant",
+        defaultPlaces: [{ x: 2, y: 0, }, { x: 5, y: 0, }],
     },
     {
         figure: "queen",
@@ -63,8 +63,8 @@ export default [
             { x: [-1, -2, -3, -4, -5, -6, -7], y: [0, 0, 0, 0, 0, 0, 0], },
             { x: [0, 0, 0, 0, 0, 0, 0], y: [-1, -2, -3, -4, -5, -6, -7], },
         ],
-        icon: "queen.svg",
-        defaultPlace: { x: 3, y: 0, },
+        filename: "queen",
+        defaultPlaces: [{ x: 3, y: 0, }],
     },
     {
         figure: "king",
@@ -78,7 +78,7 @@ export default [
             { x: [-1], y: [0], },
             { x: [-1], y: [-1], },
         ],
-        icon: "king.svg",
-        defaultPlace: { x: 4, y: 0, },
+        filename: "king",
+        defaultPlaces: [{ x: 4, y: 0, }],
     }
 ];
