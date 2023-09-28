@@ -108,7 +108,7 @@ export default class Chess {
                             break;
                         }
 
-                        if (![destroy, destroyAndMove].some(Boolean)) {
+                        if (!destroy) {
                             cellMove.dataset.areaMove = "";
                         }
                     }
