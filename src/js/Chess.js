@@ -3,7 +3,7 @@ import figuresData from "./figuresData";
 export default class Chess {
     constructor() {
         this.rowsList = document.querySelector(".chess__rows");
-        this.move = "white";
+        this.moveSide = "white";
     }
 
     _renderRows() {
@@ -54,12 +54,17 @@ export default class Chess {
 
         cells.forEach((cell) => {
             cell.addEventListener("click", () => {
-                if (!cell.hasAttribute("data-figure")) {
+                if (!cell.hasAttribute("data-figure") || cell.hasAttribute("data-area-enemy")) {
                     return;
                 }
 
                 const figure = cell.dataset.figure;
                 const side = cell.dataset.side;
+
+                if (side !== this.moveSide) {
+                    return;
+                }
+
                 const onceMoved = cell.hasAttribute("data-once-moved");
                 const moves = figuresData.find((figData) => figData.figure === figure).moves.filter((move) => {
                     if (onceMoved) {
@@ -74,7 +79,7 @@ export default class Chess {
                 this._clearDataCells();
 
                 for (let i = 0; i < moves.length; i++) {
-                    const { x, y, } = moves[i];
+                    const { x, y, destroy, destroyAndMove, } = moves[i];
 
                     for (let j = 0; j < x.length; j++) {
                         const defCoordinateX = x[j];
@@ -83,7 +88,9 @@ export default class Chess {
                         const coordinateX = defCoordinateX + figureX;
                         const cellMove = document.querySelector(`.chess__cell[data-x="${coordinateX}"][data-y="${coordinateY}"]`);
 
-                        if (cellMove && cellMove.dataset.side !== side && cellMove.dataset.figure) {
+                        cell.dataset.activeFigure = "";
+
+                        if (cellMove && cellMove.dataset.side !== side && cellMove.dataset.figure && (destroy || destroyAndMove)) {
                             cellMove.dataset.areaMove = "";
                             cellMove.dataset.areaEnemy = "";
                             break;
@@ -101,8 +108,9 @@ export default class Chess {
                             break;
                         }
 
-                        cellMove.dataset.areaMove = "";
-                        cell.dataset.activeFigure = "";
+                        if (![destroy, destroyAndMove].some(Boolean)) {
+                            cellMove.dataset.areaMove = "";
+                        }
                     }
                 }
             });
@@ -120,6 +128,8 @@ export default class Chess {
         }
 
         cell.innerHTML = `<img src="${src}" />`;
+
+        this.moveSide = side === "white" ? "black" : "white";
     }
 
     _removeFigureOnCell(x, y) {
@@ -138,16 +148,42 @@ export default class Chess {
 
         cells.forEach((cell) => {
             cell.addEventListener("click", () => {
-                if (!cell.hasAttribute("data-area-move")) {
+                const activeFigure = document.querySelector(".chess__cell[data-active-figure]");
+                const side = activeFigure ? activeFigure.dataset.side : "";
+
+                if (!cell.hasAttribute("data-area-move") || side !== this.moveSide) {
                     return;
                 }
 
-                const activeFigure = document.querySelector(".chess__cell[data-active-figure]");
                 const newFigureX = parseInt(cell.dataset.x);
                 const newFigureY = parseInt(cell.dataset.y);
                 const oldFigureX = parseInt(activeFigure.dataset.x);
                 const oldFigureY = parseInt(activeFigure.dataset.y);
-                const side = activeFigure.dataset.side;
+                const figure = activeFigure.dataset.figure;
+                const src = activeFigure.querySelector("img").src;
+
+                this._addFigureOnCell(newFigureX, newFigureY, side, src, figure, activeFigure);
+                this._removeFigureOnCell(oldFigureX, oldFigureY);
+            });
+        });
+    }
+
+    _destroyFigure() {
+        const cells = document.querySelectorAll(".chess__cell");
+
+        cells.forEach((cell) => {
+            cell.addEventListener("click", () => {
+                const activeFigure = document.querySelector(".chess__cell[data-active-figure]");
+                const side = activeFigure ? activeFigure.dataset.side : "";
+
+                if (!cell.hasAttribute("data-area-enemy") || side !== this.moveSide) {
+                    return;
+                }
+
+                const newFigureX = parseInt(cell.dataset.x);
+                const newFigureY = parseInt(cell.dataset.y);
+                const oldFigureX = parseInt(activeFigure.dataset.x);
+                const oldFigureY = parseInt(activeFigure.dataset.y);
                 const figure = activeFigure.dataset.figure;
                 const src = activeFigure.querySelector("img").src;
 
@@ -163,5 +199,6 @@ export default class Chess {
         this._renderFigures(false);
         this._viewMovesByClickOnFigure();
         this._moveFigure();
+        this._destroyFigure();
     }
 }
