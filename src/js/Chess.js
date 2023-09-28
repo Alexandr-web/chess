@@ -108,7 +108,7 @@ export default class Chess {
                             break;
                         }
 
-                        if (!destroy) {
+                        if (!destroy && !cellMove.hasAttribute("data-figure")) {
                             cellMove.dataset.areaMove = "";
                         }
                     }
