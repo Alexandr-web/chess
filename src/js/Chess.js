@@ -3,6 +3,7 @@ import figuresData from "./figuresData";
 export default class Chess {
     constructor() {
         this.rowsList = document.querySelector(".chess__rows");
+        this.moveSideCircleEl = document.querySelector(".wrapper__circle");
         this.moveSide = "white";
     }
 
@@ -37,6 +38,10 @@ export default class Chess {
                 this._addFigureOnCell(x, coordinateY, side, src, figure);
             });
         });
+    }
+
+    _fillSideCircle() {
+        this.moveSideCircleEl.dataset.move = this.moveSide;
     }
 
     _clearDataCells() {
@@ -97,11 +102,6 @@ export default class Chess {
                         }
 
                         if (!cellMove || cellMove.dataset.side === side) {
-                            // Возможность "перепрыгивать" фигуры есть только у коня
-                            if (figure === "horse") {
-                                continue;
-                            }
-
                             // Заканчиваем искать доступные ячейки для хода
                             // так как есть преграда или же ячейки вообще не 
                             // существует
@@ -130,6 +130,7 @@ export default class Chess {
         cell.innerHTML = `<img src="${src}" />`;
 
         this.moveSide = side === "white" ? "black" : "white";
+        this._fillSideCircle();
     }
 
     _removeFigureOnCell(x, y) {
@@ -197,6 +198,7 @@ export default class Chess {
         this._renderRows();
         this._renderFigures();
         this._renderFigures(false);
+        this._fillSideCircle();
         this._viewMovesByClickOnFigure();
         this._moveFigure();
         this._destroyFigure();

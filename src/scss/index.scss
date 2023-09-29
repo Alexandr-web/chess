@@ -9,6 +9,31 @@
         justify-content: center;
         align-items: center;
     }
+
+    &__top {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    &__circle {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+
+        &[data-move="white"] {
+            background-color: #ffffff;
+            box-shadow: 0 0 10px 0px #c2c2c2;
+        }
+
+        &[data-move="black"] {
+            background-color: #000000;
+        }
+    }
+}
+
+.title {
+    margin-right: 15px;
 }
 
 .chess {
@@ -20,6 +45,7 @@
         height: 100%;
         display: grid;
         grid-template-columns: 1fr;
+        position: relative;
     }
 
     &__row {
@@ -54,6 +80,7 @@
         justify-content: center;
         align-items: center;
         padding: 10px;
+        transition: transform .3s;
 
         &[data-area-move],
         &[data-area-enemy] {
