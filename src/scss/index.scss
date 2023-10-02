@@ -1,4 +1,5 @@
 @import "./_global";
+@import "./_mixins";
 
 .wrapper {
     height: 100vh;
@@ -8,6 +9,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        perspective-origin: center center;
     }
 
     &__top {
@@ -23,7 +25,6 @@
 
         &[data-move="white"] {
             background-color: #ffffff;
-            box-shadow: 0 0 10px 0px #c2c2c2;
         }
 
         &[data-move="black"] {
@@ -32,14 +33,12 @@
     }
 }
 
-.title {
-    margin-right: 15px;
-}
-
 .chess {
     width: 500px;
     border: 1px solid black;
     height: 500px;
+    perspective: 1000px;
+    box-shadow: 0 0 25px 0 #000000;
 
     &__rows {
         height: 100%;
@@ -55,21 +54,21 @@
 
         &:nth-child(odd) {
             .chess__cell:nth-child(odd) {
-                background-color: #E1E19A;
+                background-image: linear-gradient(to bottom, #E1E1E1, #D3D3D3);
             }
 
             .chess__cell:nth-child(even) {
-                background-color: #7FB7A8;
+                background-image: linear-gradient(to bottom, #4E4E4E, #343434);
             }
         }
 
         &:nth-child(even) {
             .chess__cell:nth-child(odd) {
-                background-color: #7FB7A8;
+                background-image: linear-gradient(to bottom, #4E4E4E, #343434);
             }
 
             .chess__cell:nth-child(even) {
-                background-color: #E1E19A;
+                background-image: linear-gradient(to bottom, #E1E1E1, #D3D3D3);
             }
         }
     }
@@ -82,42 +81,22 @@
         padding: 10px;
         transition: transform .3s;
 
-        &[data-area-move],
-        &[data-area-enemy] {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        &[data-area-move] {
+            box-shadow: inset 0 0 10px 3px #20B2AA;
 
-            &::before {
-                content: "";
-                display: block;
-                width: 30%;
-                height: 30%;
-                border-radius: 50%;
-                background-color: #50C878;
-                position: absolute;
-                z-index: 9;
-            }
-
-            &::after {
-                content: "";
-                background-color: rgba(255, 255, 255, .4);
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                z-index: 99;
-            }
+            @include setKeyframesShadowAnim(pulse-shadow-area-move, #20B2AA);
         }
 
         &[data-active-figure] {
-            background-color: #FFC878 !important;
+            box-shadow: inset 0 0 10px 3px #FFC878;
+
+            @include setKeyframesShadowAnim(pulse-shadow-active-figure, #FFC878);
         }
 
         &[data-area-enemy] {
-            &::before {
-                background-color: #B5524B;
-            }
+            box-shadow: inset 0 0 10px 3px #B5524B;
+
+            @include setKeyframesShadowAnim(pulse-shadow-area-enemy, #B5524B);
         }
     }
 }
