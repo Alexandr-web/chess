@@ -8,7 +8,7 @@ const cleanCss = require("gulp-clean-css");
 const webpack = require("webpack-stream");
 const uglify = require("gulp-uglify");
 
-const buildDir = "./dist";
+const buildDir = "./docs";
 const srcDir = "./src";
 const config = {
     styles: {
